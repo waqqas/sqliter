@@ -5,8 +5,8 @@
 
 #include <boost/asio.hpp>
 #include <functional>  // std::bind
+#include <stdexcept>   // std::runtime_error
 #include <thread>      // std::thread
-
 namespace boost {
 namespace asio {
 
@@ -21,8 +21,7 @@ public:
   {}
 
   ~basic_sqlite_service()
-  {
-  }
+  {}
 
   typedef std::shared_ptr<SqliteImplementation> implementation_type;
 
@@ -40,8 +39,13 @@ public:
     impl.reset();
   }
 
+  void open(implementation_type &impl, const std::string &db_name)
+  {
+    impl->open(db_name);
+  }
+
 private:
-  boost::asio::io_service                          async_monitor_io_service_;
+  boost::asio::io_service async_monitor_io_service_;
 };
 
 template <typename SqliteImplementation>

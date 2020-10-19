@@ -8,7 +8,7 @@ namespace asio {
 
 typedef basic_sqlite<basic_sqlite_service<> > sqlite;
 
-}
+}  // namespace asio
 }  // namespace boost
 
 #endif
