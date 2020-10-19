@@ -31,6 +31,9 @@ public:
   void destroy()
   {}
 
+  template<typename Handler>
+  void async_query(const std::string& sql, Handler handler){}
+
 private:
   sqlite3 *_db;
 };

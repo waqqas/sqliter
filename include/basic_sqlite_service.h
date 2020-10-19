@@ -44,6 +44,12 @@ public:
     impl->open(db_name);
   }
 
+  template <typename Handler>
+  void async_query(implementation_type &impl, const std::string& sql, Handler &handler)
+  {
+    impl->async_query(sql, handler);
+  }
+
 private:
   boost::asio::io_service async_monitor_io_service_;
 };

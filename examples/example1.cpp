@@ -1,6 +1,7 @@
 
 #include "boost_sqlite.h"
 
+
 using namespace boost::asio;
 
 int main(void)
@@ -10,7 +11,7 @@ int main(void)
 
     db.open("test.db");
 
-    // db.async_query("SELECT * from app", [](){});
+    db.async_query("SELECT * from app", [](){});
 
     return 0;
 }
