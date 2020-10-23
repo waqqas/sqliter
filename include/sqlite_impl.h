@@ -7,6 +7,21 @@
 namespace boost {
 namespace asio {
 
+  using query_cb_type = std::function<void(int, char **, char **)>;
+
+  struct query_handler {
+    query_cb_type callback;
+  };
+
+static int query_callback(void *h, int argc, char **argv, char **azColName) {
+  query_handler *handler = (query_handler *)h;
+  if (handler->callback != nullptr) {
+    handler->callback(argc, argv, azColName);
+  }
+  return 0;
+}
+
+
 class sqlite_impl
 {
 public:
@@ -29,10 +44,23 @@ public:
     }
   }
   void destroy()
-  {}
+  {
+    sqlite3_close(_db);
+    _db = nullptr;
+  }
 
-  template<typename Handler>
-  void async_query(const std::string& sql, Handler handler){}
+  void query(const std::string &sql, const query_handler handler)
+  {
+    char *zErrMsg;
+
+    int rc = sqlite3_exec(_db, sql.c_str(), query_callback, (void*)&handler, &zErrMsg);
+    if (rc != SQLITE_OK)
+    {
+      std::string error = zErrMsg;
+      sqlite3_free(zErrMsg);
+      throw std::runtime_error(error);
+    }
+  }
 
 private:
   sqlite3 *_db;

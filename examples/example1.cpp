@@ -11,7 +11,7 @@ int main(void)
 
     db.open("test.db");
 
-    db.async_query("SELECT * from app", [](){});
+    db.async_query("SELECT * from app", [](const boost::system::error_code&){});
 
     return 0;
 }

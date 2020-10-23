@@ -18,6 +18,7 @@ public:
 
   explicit basic_sqlite_service(boost::asio::io_service &io_service)
     : boost::asio::io_service::service(io_service)
+    , io_service_(io_service)
   {}
 
   ~basic_sqlite_service()
@@ -45,13 +46,26 @@ public:
   }
 
   template <typename Handler>
-  void async_query(implementation_type &impl, const std::string& sql, Handler &handler)
+  void async_query(implementation_type &impl, const std::string &sql, Handler &handler)
   {
-    impl->async_query(sql, handler);
+    boost::system::error_code ec = boost::system::error_code();
+
+    try
+    {
+      query_handler h{[](int, char **, char **){}};
+
+      impl->query(sql, h);
+      this->io_service_.post(std::bind(handler, ec));
+    }
+    catch (const std::exception &e)
+    {
+      ec = boost::asio::error::operation_aborted;
+      this->io_service_.post(std::bind(handler, ec));
+    }
   }
 
 private:
-  boost::asio::io_service async_monitor_io_service_;
+  boost::asio::io_service &io_service_;
 };
 
 template <typename SqliteImplementation>
