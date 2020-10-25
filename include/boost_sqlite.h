@@ -3,7 +3,7 @@
 
 #include "basic_sqlite.h"
 
-namespace boost {
+namespace waqqas {
 namespace asio {
 
 typedef basic_sqlite<basic_sqlite_service<> > sqlite;

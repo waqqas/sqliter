@@ -6,7 +6,7 @@
 #include <boost/asio.hpp>
 #include <string>
 
-namespace boost {
+namespace waqqas {
 namespace asio {
 
 template <typename Service>

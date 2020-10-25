@@ -4,7 +4,7 @@
 #include <sqlite3.h>
 #include <string>
 
-namespace boost {
+namespace waqqas {
 namespace asio {
 
 static int query_callback(void *h, int argc, char **argv, char **azColName);
@@ -19,17 +19,6 @@ public:
   {
     query_cb_type callback;
   };
-
-  sqlite_impl()
-  {}
-
-  ~sqlite_impl()
-  {
-    if (_db)
-    {
-      sqlite3_close(_db);
-    }
-  }
 
   void open(const std::string &db_name)
   {
@@ -46,14 +35,10 @@ public:
 
   void query(const std::string &sql, const query_handler handler)
   {
-    char *zErrMsg;
-
-    int rc = sqlite3_exec(_db, sql.c_str(), query_callback, (void *)&handler, &zErrMsg);
+    int rc = sqlite3_exec(_db, sql.c_str(), query_callback, (void *)&handler, NULL);
     if (rc != SQLITE_OK)
     {
-      std::string error = zErrMsg;
-      sqlite3_free(zErrMsg);
-      throw std::runtime_error(error);
+      throw std::runtime_error(sqlite3_errmsg(_db));
     }
   }
 

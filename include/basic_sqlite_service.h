@@ -7,8 +7,12 @@
 #include <functional>  // std::bind
 #include <stdexcept>   // std::runtime_error
 #include <thread>      // std::thread
-namespace boost {
+namespace waqqas {
 namespace asio {
+
+class query_result
+{
+};
 
 template <typename SqliteImplementation = sqlite_impl>
 class basic_sqlite_service : public boost::asio::io_service::service
@@ -50,17 +54,20 @@ public:
   {
     boost::system::error_code ec = boost::system::error_code();
 
+    query_result result;
     try
     {
-      sqlite_impl::query_handler h{[](int, char **, char **){}};
+      sqlite_impl::query_handler qh{[&result](int, char **, char **) {
 
-      impl->query(sql, h);
-      this->io_service_.post(std::bind(handler, ec));
+      }};
+
+      impl->query(sql, qh);
+      this->io_service_.post(std::bind(handler, ec, result));
     }
     catch (const std::exception &e)
     {
       ec = boost::asio::error::operation_aborted;
-      this->io_service_.post(std::bind(handler, ec));
+      this->io_service_.post(std::bind(handler, ec, result));
     }
   }
 
@@ -72,5 +79,5 @@ template <typename SqliteImplementation>
 boost::asio::io_service::id basic_sqlite_service<SqliteImplementation>::id;
 
 }  // namespace asio
-}  // namespace boost
+}  // namespace waqqas
 #endif
