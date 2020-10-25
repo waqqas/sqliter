@@ -7,24 +7,19 @@
 namespace boost {
 namespace asio {
 
-  using query_cb_type = std::function<void(int, char **, char **)>;
-
-  struct query_handler {
-    query_cb_type callback;
-  };
-
-static int query_callback(void *h, int argc, char **argv, char **azColName) {
-  query_handler *handler = (query_handler *)h;
-  if (handler->callback != nullptr) {
-    handler->callback(argc, argv, azColName);
-  }
-  return 0;
-}
-
+static int query_callback(void *h, int argc, char **argv, char **azColName);
 
 class sqlite_impl
 {
+private:
+  using query_cb_type = std::function<void(int, char **, char **)>;
+
 public:
+  struct query_handler
+  {
+    query_cb_type callback;
+  };
+
   sqlite_impl()
   {}
 
@@ -53,7 +48,7 @@ public:
   {
     char *zErrMsg;
 
-    int rc = sqlite3_exec(_db, sql.c_str(), query_callback, (void*)&handler, &zErrMsg);
+    int rc = sqlite3_exec(_db, sql.c_str(), query_callback, (void *)&handler, &zErrMsg);
     if (rc != SQLITE_OK)
     {
       std::string error = zErrMsg;
@@ -65,6 +60,17 @@ public:
 private:
   sqlite3 *_db;
 };
+
+static int query_callback(void *h, int argc, char **argv, char **azColName)
+{
+  sqlite_impl::query_handler *handler = (sqlite_impl::query_handler *)h;
+  if (handler->callback != nullptr)
+  {
+    handler->callback(argc, argv, azColName);
+  }
+  return 0;
+}
+
 }  // namespace asio
 }  // namespace boost
 

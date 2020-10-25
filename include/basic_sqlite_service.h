@@ -52,7 +52,7 @@ public:
 
     try
     {
-      query_handler h{[](int, char **, char **){}};
+      sqlite_impl::query_handler h{[](int, char **, char **){}};
 
       impl->query(sql, h);
       this->io_service_.post(std::bind(handler, ec));
