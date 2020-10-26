@@ -6,11 +6,13 @@
 
 #include <boost/asio.hpp>
 #include <functional>  // std::bind
+#include <iostream>
 #include <list>
 #include <stdexcept>  // std::runtime_error
 #include <string>
 #include <thread>   // std::thread
 #include <utility>  // std::pair
+
 namespace waqqas {
 namespace asio {
 
@@ -18,7 +20,12 @@ template <typename... T>
 class query_result
 {
 public:
-  using data_type_t = std::list<std::tuple<T...>>;
+  using data_type_t      = std::list<std::tuple<T...>>;
+  using result_data_type = typename data_type_t::value_type;
+
+  template <std::size_t N>
+  using element_type = typename std::tuple_element<N, result_data_type>::type;
+
   std::list<std::string> column_names;
   data_type_t            data;
 };
@@ -70,14 +77,18 @@ public:
     try
     {
       sqlite_impl::query_handler qh{[&result](int num_columns, char **data, char **columns) {
-        int i = 0;
+        using first_element_type = typename query_result_t::template element_type<0>;
 
-        assert(num_columns == std::tuple_size<typename query_result_t::data_type_t::value_type>::value);
-        
-        for (i = 0; i < num_columns; i++)
-        {
-          // result.data.push_back(std::make_tuple());
-        }
+        assert(num_columns == std::tuple_size<typename query_result_t::result_data_type>::value);
+
+        // std::stringstream st(data[0]);
+        // first_element_type one;
+        // st >> one;
+
+        // std::cout << one << std::endl;
+        // std::cout << data[1] << std::endl;
+
+        // result.data.push_back(std::make_tuple());
       }};
 
       impl->query(sql, qh);
