@@ -71,6 +71,9 @@ public:
     {
       sqlite_impl::query_handler qh{[&result](int num_columns, char **data, char **columns) {
         int i = 0;
+
+        assert(num_columns == std::tuple_size<typename query_result_t::data_type_t::value_type>::value);
+        
         for (i = 0; i < num_columns; i++)
         {
           // result.data.push_back(std::make_tuple());
