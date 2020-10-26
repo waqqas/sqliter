@@ -3,32 +3,17 @@
 
 #include "handler_helper.h"
 #include "sqlite_impl.h"
+#include "query_result.h"
 
 #include <boost/asio.hpp>
 #include <functional>  // std::bind
 #include <iostream>
-#include <list>
 #include <stdexcept>  // std::runtime_error
 #include <string>
 #include <thread>   // std::thread
-#include <utility>  // std::pair
 
 namespace waqqas {
 namespace asio {
-
-template <typename... T>
-class query_result
-{
-public:
-  using data_type_t      = std::list<std::tuple<T...>>;
-  using result_data_type = typename data_type_t::value_type;
-
-  template <std::size_t N>
-  using element_type = typename std::tuple_element<N, result_data_type>::type;
-
-  std::list<std::string> column_names;
-  data_type_t            data;
-};
 
 template <typename SqliteImplementation = sqlite_impl>
 class basic_sqlite_service : public boost::asio::io_service::service
@@ -71,27 +56,37 @@ public:
     boost::system::error_code ec = boost::system::error_code();
 
     using traits         = function_traits<Handler>;
-    using query_result_t = typename traits::template arg<1>::type;
+    using query_result_type = typename traits::template arg<1>::type;
 
-    query_result_t result;
+    query_result_type result;
     try
     {
       sqlite_impl::query_handler qh{[&result](int num_columns, char **data, char **columns) {
-        using first_element_type = typename query_result_t::template element_type<0>;
 
-        assert(num_columns == std::tuple_size<typename query_result_t::result_data_type>::value);
+        assert(num_columns == std::tuple_size<typename query_result_type::result_data_type>::value);
 
-        // std::stringstream st(data[0]);
-        // first_element_type one;
-        // st >> one;
+        using first_element_type = typename query_result_type::template element_type<0>;
+        using second_element_type = typename query_result_type::template element_type<1>;
 
-        // std::cout << one << std::endl;
-        // std::cout << data[1] << std::endl;
 
-        // result.data.push_back(std::make_tuple());
+        std::stringstream st1(data[0]);
+        first_element_type one;
+        st1 >> one;
+
+        // std::cout << "one: " << one << std::endl;
+
+        std::stringstream st2(data[1]);
+        second_element_type two;
+        st1 >> two;
+
+        // std::cout << "two: " << two << std::endl;
+
+        result.data.push_back(std::make_tuple(one, two));
       }};
 
       impl->query(sql, qh);
+      // std::cout <<"result size = " << result.data.size() << std::endl;
+
       this->io_service_.post(std::bind(handler, ec, result));
     }
     catch (const std::exception &e)
