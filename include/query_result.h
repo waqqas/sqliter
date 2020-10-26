@@ -4,6 +4,7 @@
 
 #include <list>
 #include <tuple>
+#include <sstream>
 
 namespace waqqas{
 namespace asio{
@@ -11,14 +12,23 @@ namespace asio{
 class query_result
 {
 public:
-  using data_type_t      = std::list<std::tuple<T...>>;
-  using result_data_type = typename data_type_t::value_type;
+  using query_data_type      = std::list<std::tuple<T...>>;
+  using result_data_type = typename query_data_type::value_type;
 
   template <std::size_t N>
   using element_type = typename std::tuple_element<N, result_data_type>::type;
 
-  std::list<std::string> column_names;
-  data_type_t            data;
+  template <std::size_t N>
+  static element_type<N> get_data(char** data){
+    std::stringstream st(data[N]);
+    element_type<N> value;
+    st >> value;
+
+    return value;
+  }
+
+  // std::list<std::string> column_names;
+  query_data_type            data;
 };
 }}
 #endif

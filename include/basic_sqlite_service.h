@@ -9,7 +9,7 @@
 #include <functional>  // std::bind
 #include <iostream>
 #include <stdexcept>  // std::runtime_error
-#include <string>
+#include <string>     // std::string
 #include <thread>   // std::thread
 
 namespace waqqas {
@@ -64,28 +64,11 @@ public:
       sqlite_impl::query_handler qh{[&result](int num_columns, char **data, char **columns) {
 
         assert(num_columns == std::tuple_size<typename query_result_type::result_data_type>::value);
+        result.data.push_back(std::make_tuple(query_result_type::template get_data<0>(data), query_result_type::template get_data<1>(data)));
 
-        using first_element_type = typename query_result_type::template element_type<0>;
-        using second_element_type = typename query_result_type::template element_type<1>;
-
-
-        std::stringstream st1(data[0]);
-        first_element_type one;
-        st1 >> one;
-
-        // std::cout << "one: " << one << std::endl;
-
-        std::stringstream st2(data[1]);
-        second_element_type two;
-        st1 >> two;
-
-        // std::cout << "two: " << two << std::endl;
-
-        result.data.push_back(std::make_tuple(one, two));
       }};
 
       impl->query(sql, qh);
-      // std::cout <<"result size = " << result.data.size() << std::endl;
 
       this->io_service_.post(std::bind(handler, ec, result));
     }
