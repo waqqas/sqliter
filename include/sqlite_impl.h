@@ -1,10 +1,10 @@
-#ifndef BASIC_SQLITE_IMPL_H
-#define BASIC_SQLITE_IMPL_H
+#ifndef SQLITER_BASIC_SQLITE_IMPL_H
+#define SQLITER_BASIC_SQLITE_IMPL_H
 
 #include <sqlite3.h>
 #include <string>
 
-namespace waqqas {
+namespace sqliter {
 namespace asio {
 
 static int query_callback(void *h, int argc, char **argv, char **azColName);

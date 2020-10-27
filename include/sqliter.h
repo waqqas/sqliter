@@ -1,14 +1,14 @@
-#ifndef BOOST_SQLITE_H
-#define BOOST_SQLITE_H
+#ifndef SQLITER_H
+#define SQLITER_H
 
 #include "basic_sqlite.h"
 
-namespace waqqas {
+namespace sqliter {
 namespace asio {
 
 typedef basic_sqlite<basic_sqlite_service<> > sqlite;
 
 }  // namespace asio
-}  // namespace boost
+}  // namespace sqliter
 
 #endif

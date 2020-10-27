@@ -1,5 +1,5 @@
-#ifndef BASCI_SQLITE_SERVICE_H
-#define BASCI_SQLITE_SERVICE_H
+#ifndef SQLITER_BASIC_SQLITE_SERVICE_H
+#define SQLITER_BASIC_SQLITE_SERVICE_H
 
 #include "handler_helper.h"
 #include "query_result.h"
@@ -11,7 +11,7 @@
 #include <string>     // std::string
 
 
-namespace waqqas {
+namespace sqliter {
 namespace asio {
 
 template <typename SqliteImplementation = sqlite_impl>
@@ -84,5 +84,5 @@ template <typename SqliteImplementation>
 boost::asio::io_service::id basic_sqlite_service<SqliteImplementation>::id;
 
 }  // namespace asio
-}  // namespace waqqas
+}  // namespace sqliter
 #endif

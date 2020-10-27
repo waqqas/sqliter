@@ -1,13 +1,13 @@
 
-#ifndef BOOST_QUERY_RESULT_H
-#define BOOST_QUERY_RESULT_H
+#ifndef SQLITER_QUERY_RESULT_H
+#define SQLITER_QUERY_RESULT_H
 
 #include <iostream>
 #include <list>
 #include <sstream>
 #include <tuple>
 
-namespace waqqas {
+namespace sqliter {
 namespace asio {
 
 template <typename... T>
@@ -46,5 +46,5 @@ public:
   query_data_type data;
 };
 }  // namespace asio
-}  // namespace waqqas
+}  // namespace sqliter
 #endif

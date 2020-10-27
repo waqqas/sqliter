@@ -1,9 +1,11 @@
-#ifndef BOOOST_SQLITE_HANDLER_HELPER_H
-#define BOOOST_SQLITE_HANDLER_HELPER_H
+#ifndef SQLITER_HANDLER_HELPER_H
+#define SQLITER_HANDLER_HELPER_H
 
 #include <cstddef>
 #include <tuple>  // std::tuple_element
 
+namespace sqliter {
+namespace asio {
 template <typename T>
 struct function_traits : public function_traits<decltype(&T::operator())>
 {
@@ -30,5 +32,6 @@ struct function_traits<ReturnType (ClassType::*)(Args...) const>
     // composed of those arguments.
   };
 };
-
+}  // namespace asio
+}  // namespace sqliter
 #endif

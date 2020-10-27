@@ -1,12 +1,12 @@
-#ifndef BASIC_SQLITE_H
-#define BASIC_SQLITE_H
+#ifndef SQLITER_BASIC_SQLITE_H
+#define SQLITER_BASIC_SQLITE_H
 
 #include "basic_sqlite_service.h"
 
 #include <boost/asio.hpp>
 #include <string>
 
-namespace waqqas {
+namespace sqliter {
 namespace asio {
 
 template <typename Service>
@@ -30,5 +30,5 @@ public:
 };
 
 }  // namespace asio
-}  // namespace boost
+}  // namespace sqliter
 #endif
