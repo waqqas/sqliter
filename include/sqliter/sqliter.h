@@ -1,7 +1,7 @@
 #ifndef SQLITER_H
 #define SQLITER_H
 
-#include "basic_sqlite.h"
+#include "sqliter/basic_sqlite.h"
 
 namespace sqliter {
 namespace asio {

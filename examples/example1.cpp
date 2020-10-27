@@ -1,5 +1,5 @@
 
-#include "sqliter.h"
+#include "sqliter/sqliter.h"
 
 #include <iostream>
 
@@ -11,6 +11,11 @@ int main(int argc, char *argv[])
   sqlite                  db(io);
 
   using app_table_result = query_result<int32_t, int32_t>;
+
+  if (argc != 2)
+  {
+    std::cout << argv[0] << " <sqlite db file>" << std::endl;
+  }
 
   db.open(argv[1]);
 

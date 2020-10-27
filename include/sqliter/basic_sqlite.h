@@ -1,7 +1,7 @@
 #ifndef SQLITER_BASIC_SQLITE_H
 #define SQLITER_BASIC_SQLITE_H
 
-#include "basic_sqlite_service.h"
+#include "sqliter/basic_sqlite_service.h"
 
 #include <boost/asio.hpp>
 #include <string>

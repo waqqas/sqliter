@@ -1,9 +1,9 @@
 #ifndef SQLITER_BASIC_SQLITE_SERVICE_H
 #define SQLITER_BASIC_SQLITE_SERVICE_H
 
-#include "handler_helper.h"
-#include "query_result.h"
-#include "sqlite_impl.h"
+#include "sqliter/handler_helper.h"
+#include "sqliter/query_result.h"
+#include "sqliter/sqlite_impl.h"
 
 #include <boost/asio.hpp>
 #include <functional>  // std::bind
@@ -60,7 +60,7 @@ public:
     query_result_type result;
     try
     {
-      sqlite_impl::query_handler qh{[&result](int num_columns, char **data, char **columns) {
+      sqlite_impl::query_handler qh{[&result](int num_columns, char **data, char **) {
         assert(num_columns == std::tuple_size<typename query_result_type::result_data_type>::value);
         result.data.push_back(query_result_type::make_tuple_from_data(data));
       }};
