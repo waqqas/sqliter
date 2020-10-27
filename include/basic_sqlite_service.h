@@ -2,15 +2,14 @@
 #define BASCI_SQLITE_SERVICE_H
 
 #include "handler_helper.h"
-#include "sqlite_impl.h"
 #include "query_result.h"
+#include "sqlite_impl.h"
 
 #include <boost/asio.hpp>
 #include <functional>  // std::bind
-#include <iostream>
 #include <stdexcept>  // std::runtime_error
 #include <string>     // std::string
-#include <thread>   // std::thread
+
 
 namespace waqqas {
 namespace asio {
@@ -55,17 +54,15 @@ public:
   {
     boost::system::error_code ec = boost::system::error_code();
 
-    using traits         = function_traits<Handler>;
+    using traits            = function_traits<Handler>;
     using query_result_type = typename traits::template arg<1>::type;
 
     query_result_type result;
     try
     {
       sqlite_impl::query_handler qh{[&result](int num_columns, char **data, char **columns) {
-
         assert(num_columns == std::tuple_size<typename query_result_type::result_data_type>::value);
-        result.data.push_back(std::make_tuple(query_result_type::template get_data<0>(data), query_result_type::template get_data<1>(data)));
-
+        result.data.push_back(query_result_type::make_tuple_from_data(data));
       }};
 
       impl->query(sql, qh);
