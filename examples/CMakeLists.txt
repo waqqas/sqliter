@@ -2,14 +2,12 @@ project(example1)
 
 set(SOURCES example1.cpp)
 
-
-find_package(Boost REQUIRED COMPONENTS system)
+add_executable(${PROJECT_NAME} ${SOURCES})
 
 find_package(sqliter CONFIG REQUIRED)
-
-add_executable(${PROJECT_NAME} ${SOURCES})
 target_link_libraries(${PROJECT_NAME} sqliter::sqliter)
 
+find_package(Boost REQUIRED COMPONENTS system)
 target_link_libraries(${PROJECT_NAME} Boost::system)
 
 find_package(SQLite3 REQUIRED)
