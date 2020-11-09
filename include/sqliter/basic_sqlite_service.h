@@ -6,6 +6,7 @@
 #include "sqliter/sqlite_impl.h"
 
 #include <boost/asio.hpp>
+#include <boost/core/ignore_unused.hpp>
 #include <functional>  // std::bind
 #include <stdexcept>  // std::runtime_error
 #include <string>     // std::string
@@ -61,6 +62,7 @@ public:
     try
     {
       sqlite_impl::query_handler qh{[&result](int num_columns, char **data, char **) {
+        boost::ignore_unused(num_columns);
         assert(num_columns == std::tuple_size<typename query_result_type::result_data_type>::value);
         result.data.push_back(query_result_type::make_tuple_from_data(data));
       }};
