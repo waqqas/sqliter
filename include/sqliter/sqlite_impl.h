@@ -3,6 +3,7 @@
 
 #include <sqlite3.h>
 #include <string>
+#include <functional>
 
 namespace sqliter {
 namespace asio {
