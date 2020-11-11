@@ -20,7 +20,7 @@ After building library
 Running example
 ---
 - `sqlite3 ./test.db < ../test.db.sql`
-- `examples/example1 ./test.db`
+- `./examples/example1 ./test.db`
 
 Usage
 ---
