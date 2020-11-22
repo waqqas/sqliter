@@ -27,6 +27,12 @@ public:
   {
     this->get_service().async_query(this->get_implementation(), sql, handler);
   }
+
+  template <typename query_result_type>
+  void query(const std::string &sql, boost::system::error_code &ec, query_result_type &result)
+  {
+    this->get_service().query(this->get_implementation(), sql, ec, result);
+  }
 };
 
 }  // namespace asio
