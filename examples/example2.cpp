@@ -10,7 +10,7 @@ int main(int argc, char *argv[])
   boost::asio::io_service io;
   sqlite                  db(io);
 
-  using app_table_result = query_result<int32_t, int32_t, std::string>;
+  using app_table_result = query_result<int32_t, int32_t, std::string, float>;
 
   if (argc != 2)
   {
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
     for (it = result.data.begin(); it != result.data.end(); ++it)
     {
       std::cout << "ID: " << std::get<0>(*it) << ", state: " << std::get<1>(*it)
-                << ", data: " << std::get<2>(*it) << std::endl;
+                << ", data: " << std::get<2>(*it) << ", float: " << std::get<3>(*it) << std::endl;
     }
   }
 
