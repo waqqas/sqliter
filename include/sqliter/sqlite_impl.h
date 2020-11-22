@@ -1,9 +1,9 @@
 #ifndef SQLITER_BASIC_SQLITE_IMPL_H
 #define SQLITER_BASIC_SQLITE_IMPL_H
 
+#include <functional>
 #include <sqlite3.h>
 #include <string>
-#include <functional>
 
 namespace sqliter {
 namespace asio {
@@ -43,6 +43,15 @@ public:
     }
   }
 
+  void query(const std::string &sql)
+  {
+    int rc = sqlite3_exec(_db, sql.c_str(), query_callback, NULL, NULL);
+    if (rc != SQLITE_OK)
+    {
+      throw std::runtime_error(sqlite3_errmsg(_db));
+    }
+  }
+
 private:
   sqlite3 *_db;
 };
@@ -50,7 +59,7 @@ private:
 static int query_callback(void *h, int argc, char **argv, char **azColName)
 {
   sqlite_impl::query_handler *handler = (sqlite_impl::query_handler *)h;
-  if (handler->callback != nullptr)
+  if (handler && handler->callback != nullptr)
   {
     handler->callback(argc, argv, azColName);
   }
@@ -58,6 +67,6 @@ static int query_callback(void *h, int argc, char **argv, char **azColName)
 }
 
 }  // namespace asio
-}  // namespace boost
+}  // namespace sqliter
 
 #endif

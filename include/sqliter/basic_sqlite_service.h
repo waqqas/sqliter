@@ -99,6 +99,20 @@ public:
     }
   }
 
+  void query(implementation_type &impl, const std::string &sql, boost::system::error_code &ec)
+  {
+    ec = boost::system::error_code();
+
+    try
+    {
+      impl->query(sql);
+    }
+    catch (const std::exception &e)
+    {
+      ec = boost::asio::error::operation_aborted;
+    }
+  }
+
 private:
   boost::asio::io_service &io_service_;
 };

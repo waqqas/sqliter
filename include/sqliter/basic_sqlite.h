@@ -33,6 +33,11 @@ public:
   {
     this->get_service().query(this->get_implementation(), sql, ec, result);
   }
+
+  void query(const std::string &sql, boost::system::error_code &ec)
+  {
+    this->get_service().query(this->get_implementation(), sql, ec);
+  }
 };
 
 }  // namespace asio
