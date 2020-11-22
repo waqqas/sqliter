@@ -113,6 +113,20 @@ public:
     }
   }
 
+  void close(implementation_type &impl, boost::system::error_code &ec)
+  {
+    ec = boost::system::error_code();
+
+    try
+    {
+      impl->destroy();
+    }
+    catch (const std::exception &e)
+    {
+      ec = boost::asio::error::operation_aborted;
+    }
+  }
+
 private:
   boost::asio::io_service &io_service_;
 };

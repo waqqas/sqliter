@@ -38,6 +38,11 @@ public:
   {
     this->get_service().query(this->get_implementation(), sql, ec);
   }
+
+  void close(boost::system::error_code &ec)
+  {
+    this->get_service().close(this->get_implementation(), ec);
+  }
 };
 
 }  // namespace asio

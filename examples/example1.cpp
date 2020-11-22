@@ -38,5 +38,8 @@ int main(int argc, char *argv[])
 
   io.run();
 
+  boost::system::error_code ec = {};
+  db.close(ec);
+
   return 0;
 }

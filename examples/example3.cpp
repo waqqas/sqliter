@@ -25,5 +25,7 @@ int main(int argc, char *argv[])
 
   io.run();
 
+  db.close(ec);
+
   return 0;
 }
