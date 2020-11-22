@@ -5,7 +5,9 @@
 #include <iostream>
 #include <list>
 #include <sstream>
+#include <string>
 #include <tuple>
+#include <type_traits>
 
 namespace sqliter {
 namespace asio {
@@ -18,23 +20,32 @@ public:
   using query_data_type  = std::list<result_data_type>;
 
 private:
-  template <std::size_t... I>
-  static auto make_tuple(std::index_sequence<I...>, char **data)
+  template <std::size_t... N>
+  static auto make_tuple(std::index_sequence<N...>, char **data)
   {
-    return std::make_tuple(get_data<I>(data)...);
+    return std::make_tuple(get_data<N>(data[N])...);
   }
 
   template <std::size_t N>
   using element_type = typename std::tuple_element<N, result_data_type>::type;
 
   template <std::size_t N>
-  static element_type<N> get_data(char **data)
+  static typename std::enable_if<std::is_arithmetic<element_type<N>>::value, element_type<N>>::type
+  get_data(char *data)
   {
-    std::stringstream st(data[N]);
+    std::stringstream st(data);
     element_type<N>   value;
     st >> value;
 
     return value;
+  }
+
+  template <std::size_t N>
+  static
+      typename std::enable_if<std::is_same<element_type<N>, std::string>::value, std::string>::type
+      get_data(char *data)
+  {
+    return std::string(data);
   }
 
 public:
