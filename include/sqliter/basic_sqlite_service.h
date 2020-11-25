@@ -49,31 +49,50 @@ public:
     impl->open(db_name);
   }
 
+  // template <typename Handler>
+  // void async_query(implementation_type &impl, const std::string &sql, Handler &handler)
+  // {
+  //   boost::system::error_code ec = boost::system::error_code();
+
+  //   using traits            = function_traits<Handler>;
+  //   using query_result_type = typename traits::template arg<1>::type;
+
+  //   query_result_type result;
+  //   try
+  //   {
+  //     sqlite_impl::query_handler qh{[&result](int num_columns, char **data, char **) {
+  //       boost::ignore_unused(num_columns);
+  //       assert(num_columns == std::tuple_size<typename
+  //       query_result_type::result_data_type>::value);
+  //       result.data.push_back(query_result_type::make_tuple_from_data(data));
+  //     }};
+
+  //     impl->query(sql, qh);
+
+  //     this->io_service_.post(std::bind(handler, ec, result));
+  //   }
+  //   catch (const std::exception &e)
+  //   {
+  //     ec = boost::asio::error::operation_aborted;
+  //     this->io_service_.post(std::bind(handler, ec, result));
+  //   }
+  // }
+
   template <typename Handler>
   void async_query(implementation_type &impl, const std::string &sql, Handler &handler)
   {
     boost::system::error_code ec = boost::system::error_code();
 
-    using traits            = function_traits<Handler>;
-    using query_result_type = typename traits::template arg<1>::type;
-
-    query_result_type result;
     try
     {
-      sqlite_impl::query_handler qh{[&result](int num_columns, char **data, char **) {
-        boost::ignore_unused(num_columns);
-        assert(num_columns == std::tuple_size<typename query_result_type::result_data_type>::value);
-        result.data.push_back(query_result_type::make_tuple_from_data(data));
-      }};
+      impl->query(sql);
 
-      impl->query(sql, qh);
-
-      this->io_service_.post(std::bind(handler, ec, result));
+      this->io_service_.post(std::bind(handler, ec));
     }
     catch (const std::exception &e)
     {
       ec = boost::asio::error::operation_aborted;
-      this->io_service_.post(std::bind(handler, ec, result));
+      this->io_service_.post(std::bind(handler, ec));
     }
   }
 
