@@ -42,11 +42,20 @@ int main(int argc, char *argv[])
 
   db.open(argv[1]);
 
-  async_query(db, "SELECT * from app", [](const boost::system::error_code &ec) {
-    std::cout << "ec: " << ec.message() << std::endl;
-  });
+  std::future<void> f = async_query(db, "SELECT * from abc", boost::asio::use_future);
 
   io.run();
+
+  try
+  {
+    // Get the result of the operation.
+    f.get();
+    std::cout << "success" << std::endl;
+  }
+  catch (const std::exception &e)
+  {
+    std::cout << "Error: " << e.what() << "\n";
+  }
 
   boost::system::error_code ec = {};
   db.close(ec);
