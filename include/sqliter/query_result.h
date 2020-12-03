@@ -30,22 +30,29 @@ private:
   using element_type = typename std::tuple_element<N, result_data_type>::type;
 
   template <std::size_t N>
-  static typename std::enable_if<std::is_arithmetic<element_type<N>>::value, element_type<N>>::type
-  get_data(char *data)
+  static std::enable_if_t<std::is_arithmetic<element_type<N>>::value, element_type<N>> get_data(
+      char *data)
   {
-    std::stringstream st(data);
-    element_type<N>   value;
-    st >> value;
+    element_type<N> value = std::numeric_limits<element_type<N>>::min();
+    if (data != nullptr)
+    {
+
+      std::stringstream st(data);
+      st >> value;
+    }
 
     return value;
   }
 
   template <std::size_t N>
-  static
-      typename std::enable_if<std::is_same<element_type<N>, std::string>::value, std::string>::type
-      get_data(char *data)
+  static std::enable_if_t<std::is_same<element_type<N>, std::string>::value, std::string> get_data(
+      char *data)
   {
-    return std::string(data);
+    if (data != nullptr)
+    {
+      return std::string(data);
+    }
+    return std::string("");
   }
 
 public:

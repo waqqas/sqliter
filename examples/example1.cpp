@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
 
   db.open(argv[1]);
 
-  std::future<void> f = async_query(db, "SELECT * from abc", boost::asio::use_future);
+  std::future<void> f = async_query(db, "SELECT * from app", boost::asio::use_future);
 
   io.run();
 
